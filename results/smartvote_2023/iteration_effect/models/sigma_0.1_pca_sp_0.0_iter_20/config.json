@@ -1,0 +1,1 @@
+{"prior_variance": 0.1, "kernel_name": "linear", "pca_initialization": true, "sampling_resolution": 100, "scale_weights": false, "use_point_estimates": true, "model_regularization": 1e-08, "random_state": 0, "n_iterations": 0, "dataset": "smartvote_2023", "sparsity": 0.0, "seed": 0, "test_fraction": 0.0}

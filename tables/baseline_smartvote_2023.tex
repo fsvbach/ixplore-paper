@@ -1,0 +1,27 @@
+\begin{table}[ht]
+\centering
+\caption{Performance comparison on Smartvote (2023). Each cell is the mean over all sparsity levels. Reference algorithms are listed in the top block; \IXPLORE is run both with the continuous input and the binarized input$^*$. The best-performing algorithm is shown in \textbf{bold}, the runner-up in \textit{italics}.}
+\label{tab:baseline_smartvote_2023}
+\small
+\begin{tabular}{lcccccccc}
+\toprule
+ & \multicolumn{2}{c}{Train Rec.} & \multicolumn{2}{c}{Train Imp.} & \multicolumn{2}{c}{Test Rec.} & \multicolumn{2}{c}{Test Imp.} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+Algorithm & MAE & ACC & MAE & ACC & MAE & ACC & MAE & ACC \\
+\midrule
+Linear PCA & 0.245 & 80.2\% & 0.274 & 76.4\% & 0.282 & 72.4\% & 0.301 & 69.1\% \\
+Logistic PCA & 0.175 & 85.1\% & \textit{0.206} & \textit{80.9\%} & 0.267 & 72.7\% & 0.289 & 69.5\% \\
+Kernel PCA & 0.195 & 84.7\% & 0.223 & 80.4\% & 0.283 & 70.6\% & 0.304 & 67.4\% \\
+t-SNE & 0.212 & 80.9\% & 0.239 & 76.7\% & 0.280 & 70.0\% & 0.300 & 67.0\% \\
+UMAP & 0.210 & 81.1\% & 0.233 & 77.4\% & 0.284 & 69.6\% & 0.301 & 67.0\% \\
+VAE (2-layer) & 0.186 & 84.5\% & 0.207 & \textbf{81.4\%} & 0.279 & 72.1\% & 0.297 & 69.0\% \\
+VAE (logistic) & \textit{0.175} & 85.0\% & 0.208 & 80.2\% & 0.273 & 71.9\% & 0.293 & 68.9\% \\
+IDEAL & 0.180 & 84.6\% & 0.210 & 80.1\% & 0.241 & 76.0\% & \textit{0.270} & 71.3\% \\
+emIRT & 0.205 & 81.3\% & 0.221 & 79.0\% & 0.259 & 74.4\% & 0.287 & 70.8\% \\
+LSIRM & 0.200 & 84.0\% & 0.230 & 78.8\% & \textbf{0.230} & \textbf{79.2\%} & 0.278 & 71.3\% \\
+\midrule
+IXPLORE & \textbf{0.168} & \textit{85.2\%} & \textbf{0.200} & 80.6\% & \textit{0.232} & 77.1\% & \textbf{0.261} & \textbf{72.3\%} \\
+IXPLORE$^*$ & 0.177 & \textbf{86.2\%} & 0.219 & 80.0\% & 0.235 & \textit{77.9\%} & 0.270 & \textit{72.3\%} \\
+\bottomrule
+\end{tabular}
+\end{table}

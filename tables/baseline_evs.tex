@@ -1,0 +1,27 @@
+\begin{table}[ht]
+\centering
+\caption{Performance comparison on European Values Study. Each cell is the mean over all sparsity levels. Reference algorithms are listed in the top block; \IXPLORE is run both with the continuous input and the binarized input$^*$. The best-performing algorithm is shown in \textbf{bold}, the runner-up in \textit{italics}.}
+\label{tab:baseline_evs}
+\small
+\begin{tabular}{lcccccccc}
+\toprule
+ & \multicolumn{2}{c}{Train Rec.} & \multicolumn{2}{c}{Train Imp.} & \multicolumn{2}{c}{Test Rec.} & \multicolumn{2}{c}{Test Imp.} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+Algorithm & MAE & ACC & MAE & ACC & MAE & ACC & MAE & ACC \\
+\midrule
+Linear PCA & 0.207 & 75.6\% & 0.230 & \textit{71.3\%} & 0.207 & 75.9\% & 0.229 & 71.6\% \\
+Logistic PCA & \textit{0.182} & \textit{79.6\%} & 0.240 & 71.2\% & \textit{0.199} & 76.2\% & \textit{0.225} & \textbf{71.9\%} \\
+Kernel PCA & 0.195 & 76.5\% & \textbf{0.226} & \textbf{71.5\%} & 0.202 & 76.1\% & 0.227 & 71.7\% \\
+t-SNE & 0.204 & 74.8\% & 0.235 & 70.1\% & 0.209 & 74.1\% & 0.231 & 70.7\% \\
+UMAP & 0.208 & 74.3\% & 0.236 & 69.6\% & 0.205 & 74.6\% & 0.229 & 70.9\% \\
+VAE (2-layer) & 0.220 & 74.8\% & 0.236 & 70.6\% & 0.243 & 70.7\% & 0.246 & 69.3\% \\
+VAE (logistic) & -- & -- & -- & -- & -- & -- & -- & -- \\
+IDEAL & -- & -- & -- & -- & -- & -- & -- & -- \\
+emIRT & 0.213 & 77.0\% & 0.254 & 69.8\% & 0.260 & 75.2\% & 0.349 & 63.1\% \\
+LSIRM & -- & -- & -- & -- & -- & -- & -- & -- \\
+\midrule
+IXPLORE & \textbf{0.173} & 78.8\% & \textit{0.230} & 69.9\% & \textbf{0.180} & \textit{77.8\%} & \textbf{0.221} & 71.3\% \\
+IXPLORE$^*$ & 0.204 & \textbf{82.2\%} & 0.270 & 70.1\% & 0.200 & \textbf{80.0\%} & 0.238 & \textit{71.7\%} \\
+\bottomrule
+\end{tabular}
+\end{table}

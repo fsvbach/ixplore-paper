@@ -1,0 +1,12 @@
+# Versions used for the paper (Python 3.14).
+ixplore==1.2
+numpy==2.3.3
+pandas==2.3.3
+scipy==1.16.2
+scikit-learn==1.7.2
+matplotlib==3.10.7
+torch==2.10.0
+umap-learn==0.5.12
+openTSNE==1.0.4
+tqdm==4.67.3
+jupyter
