@@ -6,7 +6,7 @@ The IXPLORE package is available here:
 [fsvbach/IXPLORE](https://github.com/fsvbach/IXPLORE), also on PyPI as `ixplore`.
 
 The full paper is available on ArXiv:
-[ArXiv link to be inserted]()
+[IXPLORE Report](http://arxiv.org/abs/2609.06018)
 
 ## Layout
 
@@ -45,10 +45,13 @@ in about two minutes in total. The four under `ixplore_design/` refit small
 IXPLORE models on Smartvote 2023 and take one to two minutes each.
 
 ```bash
-for nb in notebooks/*/*.ipynb; do
-  (cd "$(dirname "$nb")" && jupyter nbconvert --to notebook --execute --inplace "$(basename "$nb")")
-done
+./reproduce.sh
 ```
+
+The script runs the notebooks with `jupyter nbconvert --execute` on the
+`python3` kernel. Last verified on 2026-09-07 on macOS 26 (Apple Silicon)
+with Python 3.14.0: all ten notebooks complete in about five minutes and
+regenerate the committed figures and tables exactly.
 
 ## Reproducing the results from scratch
 
@@ -97,7 +100,7 @@ Those six checkpoints (PCA init, u = 0, 20 iterations, one per prior variance)
 and the three `feature_effect` kernel checkpoints are the only model files kept
 in `results/`, because the notebooks load them.
 
-The appendix experiments on point estimates, item updates, boundary
+The additional experiments on point estimates, item updates, boundary
 regularization, and sampling strategies run inside their notebooks and write
 their intermediate results to `results/ixplore_design/` and
 `results/smartvote_2023/posterior_effect/`.
@@ -127,5 +130,4 @@ Sources:
 - Polis: Small et al. (2021), "Polis: Scaling deliberation by mapping high
   dimensional opinion spaces", vTaiwan conversation.
 - EVS: European Values Study 2017 (GESIS ZA7500), 32 numerical items from the
-  Joint EVS/WVS 2017-2022 release (GESIS ZA7505). Only the preprocessed CSVs
-  are included, not the original data file.
+  Joint EVS/WVS 2017-2022 release (GESIS ZA7505).
