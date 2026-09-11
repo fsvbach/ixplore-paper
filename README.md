@@ -1,13 +1,9 @@
 # IXPLORE: Bounded Ideal Point Estimation with Grid-Based Uncertainty Quantification
 
-This repository contains the preprocessed datasets, the experiment scripts, the stored results, and the scripts that generate every figure and table of the paper submitted to the Journal of Statistical Software.
+This repository contains the preprocessed datasets, the experiment scripts, the stored results, and the scripts that generate every figure and table of the paper.
 
 The IXPLORE package is available here:
 [fsvbach/IXPLORE](https://github.com/fsvbach/IXPLORE), also on PyPI as `ixplore`.
-
-A preprint of the full report, which covers additional experiments beyond the
-submitted paper, is available on ArXiv:
-[IXPLORE Report](http://arxiv.org/abs/2609.06018)
 
 ## Layout
 
@@ -17,7 +13,7 @@ src/           data loading, metrics, model wrappers
 src/scripts/   experiment scripts; each writes its metrics to results/
 src/figures/   one script per figure; each reads results/ and writes its PDF to figures/
 src/tables/    the table script; reads results/ and writes the .tex files to tables/
-results/       metrics of all experiments + the IXPLORE checkpoints the figure scripts need
+results/       metrics of all experiments + the IXPLORE checkpoints
 figures/       PDF figures as included in the paper
 tables/        LaTeX tables as included in the paper
 ```
@@ -45,7 +41,7 @@ Every figure and table is produced from the stored `results/` by one script
 in `src/figures/` or `src/tables/`:
 
 ```bash
-./reproduce.sh
+./reproduce_figures.sh
 ```
 
 runs `python -m src.figures` followed by `python -m src.tables`. Any single
@@ -71,14 +67,21 @@ paper source. The `baseline_train_test` figures are the per-dataset
 counterparts of Figure 1 that the paper refers to as replication material.
 
 Last verified on 2026-09-11 on macOS 26 (Apple Silicon) with Python 3.14.0:
-`./reproduce.sh` completes in under a minute and regenerates the committed
-tables byte-identically and the committed figures pixel-identically.
+`./reproduce_figures.sh` completes in under a minute.
 
 ## Reproducing the results from scratch
 
-The stored `results/` were produced by the scripts in `src/scripts/`. Each
-script writes `train_metrics.csv` and `test_metrics.csv` (one row per model,
-sparsity level, and seed) into its own folder under `results/<dataset>/`.
+The stored `results/` were computed from `data/` by the four scripts in
+`src/scripts/`. Each writes `train_metrics.csv` and `test_metrics.csv` (one
+row per model, sparsity level, and seed) into its own folder under `results/`,
+and the figure and table scripts read nothing else.
+
+```bash
+./reproduce_results.sh
+```
+
+runs all of them and skips result folders that already exist; delete a folder
+to recompute it. The IRT baselines need R (see Setup).
 
 Evaluation protocol, shared by all scripts: the train set is fitted at
 sparsity u in {0, 0.3, 0.6, 0.9} (five seeds for u > 0) and evaluated on its
@@ -87,18 +90,23 @@ model then embeds the test users at sparsity v over the same grid. Smartvote
 2023 uses candidates as train and voters as test users. The other datasets hold
 out 15 percent of users as the test set.
 
-Baseline comparison (Figure 1, Tables 2 and 4-7), one run per dataset and
-algorithm:
+Each result folder is recreated by one command:
 
-```bash
-python -m src.scripts.run_baseline --dataset smartvote_2023 --algorithm ixplore
-```
+| Results folder | Command | Used by |
+|---|---|---|
+| `results/smartvote_2023/iteration_effect/` | `python -m src.scripts.run_iteration_effect` | Figures 2 to 5 |
+| `results/smartvote_2023/feature_effect/` | `python -m src.scripts.run_feature_effect` | Figures 6 and 7 |
+| `results/smartvote_2023/pca_sweep/` | `python -m src.scripts.run_pca_sweep` | Figure 2 |
+| `results/<dataset>/baseline/<algorithm>/` | `python -m src.scripts.run_baseline --dataset <dataset> --algorithm <algorithm>` | Figures 1 and 6, Tables 2 and 4-7, replication figures |
 
 Datasets: `smartvote_2019`, `smartvote_2023`, `voteview`, `polis`, `evs`.
 Algorithms: `pca-linear`, `pca-logistic`, `kernel-pca`, `tsne-logistic`,
 `umap-logistic`, `vae-2layer`, `vae-logistic`, `ideal`, `emirt`, `lsirm`,
-`ixplore`, `ixplore-binarised`. The fitted baseline models themselves are not
-stored in this repository, only their metrics.
+`ixplore`, `ixplore-binarised`. IDEAL, LSIRM, and the logistic VAE were not
+run on EVS; the EVS table shows `--` for them. The fitted baseline models
+themselves are not stored in this repository, only their metrics. All four
+scripts take `--n-seeds` and `--output-dir`; the configuration scripts also
+take `--dataset`.
 
 W-NOMINATE was also run on Smartvote 2023 (`src/models/wnominate_wrapper.py`,
 R package `wnominate`); its metrics are in
@@ -107,20 +115,7 @@ comparison, because its estimation does not handle response matrices with
 many missing values well (Section 4.3 of the paper), and it is commented out
 in `src/models/__init__.py`. The stored metrics document this: only two seeds
 per sparsity level completed, and at u = 0.9 the train reconstruction MAE
-rises to 0.33 from about 0.21 at lower sparsity.
-
-Configuration analysis on Smartvote 2023 (Figures 2 to 7):
-
-```bash
-python -m src.scripts.run_iteration_effect     # prior variance x init x iterations
-python -m src.scripts.run_feature_effect       # linear / polynomial / RFF kernels
-python -m src.scripts.run_pca_sweep            # PCA baselines over all dimensions
-```
-
-The six `iteration_effect` checkpoints (PCA init, u = 0, 20 iterations, one
-per prior variance) and the three `feature_effect` kernel checkpoints under
-`results/smartvote_2023/<experiment>/models/` are the only model files kept in
-`results/`, because Figures 3 and 7 load them.
+rises to 0.33 from about 0.21 at lower sparsity. It is not part of `reproduce_results.sh`.
 
 ## Datasets
 
