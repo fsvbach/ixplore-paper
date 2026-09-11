@@ -1,14 +1,18 @@
 """Default figure parameters matching the report's text width.
 
 The IXPLORE paper (probml.sty) sets `\textwidth = 6.0in`
-at 10pt. Notebook plots use these defaults so saved figures match the
+at 10pt. The figure scripts use these defaults so saved figures match the
 report's column width without rescaling in LaTeX.
 """
+
+from pathlib import Path
 
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
+
+from src.paths import FIGURES_DIR, ROOT
 
 TEXTWIDTH_IN = 6.0
 DEFAULT_HEIGHT_IN = 3.2
@@ -22,7 +26,12 @@ def figsize(width_frac: float = 1.0, aspect: float = DEFAULT_HEIGHT_IN / TEXTWID
 
 
 def apply_defaults():
-    """Apply matplotlib rcParams used across notebook figures."""
+    """Reset matplotlib to its defaults and apply the paper's rcParams.
+
+    Resetting first makes every figure independent of import order
+    (``ixplore.visualization`` changes rcParams globally when imported).
+    """
+    mpl.rcdefaults()
     mpl.rcParams.update({
         "figure.figsize": DEFAULT_FIGSIZE,
         "figure.dpi": 200,
@@ -101,3 +110,20 @@ def ellipse_legend_handler(linewidth: float = 0.5):
             return [patch]
 
     return _EllipseHandler()
+
+
+def panel_labels(axes, letters: str = "ABCDEFGH") -> None:
+    """Bold panel letters at the top-left corner of each axes, outside the frame."""
+    for ax, letter in zip(np.ravel(axes), letters):
+        ax.figure.text(0, 1, letter, va="bottom", ha="left", weight="bold",
+                       transform=ax.transAxes)
+
+
+def save_figure(fig, name: str) -> Path:
+    """Save *fig* as figures/<name>, close it, and report the path."""
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    path = FIGURES_DIR / name
+    fig.savefig(path)
+    plt.close(fig)
+    print(f"Wrote {path.relative_to(ROOT)}")
+    return path

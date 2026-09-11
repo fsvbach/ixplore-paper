@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from ixplore.utils import add_sparsity as _add_sparsity
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+from src.paths import DATA_DIR
 
 DATASET_DIRS = {
     "smartvote_2023": DATA_DIR / "smartvote" / "2023",

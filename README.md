@@ -1,22 +1,24 @@
 # IXPLORE: Bounded Ideal Point Estimation with Grid-Based Uncertainty Quantification
 
-This repository contains the preprocessed datasets, the experiment scripts, the stored results, and the notebooks that generate every figure and table in the paper.
+This repository contains the preprocessed datasets, the experiment scripts, the stored results, and the scripts that generate every figure and table in the paper.
 
 The IXPLORE package is available here:
 [fsvbach/IXPLORE](https://github.com/fsvbach/IXPLORE), also on PyPI as `ixplore`.
 
-The full paper is available on ArXiv:
+A preprint of the full paper is available on ArXiv:
 [IXPLORE Report](http://arxiv.org/abs/2609.06018)
 
 ## Layout
 
 ```
-data/        preprocessed datasets (reactions, user info, statements, weights)
-src/         data loading, metrics, model wrappers, experiment scripts
-results/     metrics of all experiments + the IXPLORE checkpoints the notebooks need
-notebooks/   one notebook per analysis; each writes its figures/tables directly
-figures/     PDF figures as included in the paper
-tables/      LaTeX tables as included in the paper
+data/          preprocessed datasets (reactions, user info, statements, weights)
+src/           data loading, metrics, model wrappers
+src/scripts/   experiment scripts; each writes its metrics to results/
+src/figures/   one script per figure; each reads results/ and writes its PDF to figures/
+src/tables/    one script per table; each reads results/ and writes its .tex to tables/
+results/       metrics of all experiments + the IXPLORE checkpoints the figure scripts need
+figures/       PDF figures as included in the paper
+tables/        LaTeX tables as included in the paper
 ```
 
 ## Setup
@@ -30,28 +32,53 @@ pip install -r requirements.txt
 
 The IRT baselines (IDEAL, emIRT, LSIRM) call R through `Rscript`, which must be
 on the `PATH` with the packages `pscl`, `emIRT`, `lsirm12pl`, and optionally `wnominate` installed
-(R 4.5.1 was used). R is only needed to rerun those baselines; all notebooks
-work without it.
+(R 4.5.1 was used). R is only needed to rerun those baselines; the figure and
+table scripts work without it.
 
-Run all commands from the repository root. The notebooks use paths relative to
-their own directory (`../../results`, `../../figures`), so start Jupyter from
-the root or from `notebooks/`.
+All scripts resolve their paths relative to the repository, so they can be
+run from any working directory. The commands below assume the repository root.
 
 ## Reproducing the figures and tables
 
-All figures and tables are produced by the ten notebooks below from the stored
-`results/`. The six under `model_evaluation/` read the stored metrics and run
-in about two minutes in total. The four under `ixplore_design/` refit small
-IXPLORE models on Smartvote 2023 and take one to two minutes each.
+Every figure and table is produced from the stored `results/` by one script
+in `src/figures/` or `src/tables/`:
 
 ```bash
 ./reproduce.sh
 ```
 
-The script runs the notebooks with `jupyter nbconvert --execute` on the
-`python3` kernel. Last verified on 2026-09-07 on macOS 26 (Apple Silicon)
-with Python 3.14.0: all ten notebooks complete in about five minutes and
-regenerate the committed figures and tables exactly.
+runs `python -m src.figures` followed by `python -m src.tables`. Any single
+output can be regenerated on its own, for example
+`python -m src.figures.prior_phase` or `python -m src.tables.baseline --dataset polis`.
+Each script also prints the numbers quoted in the text that belong to its
+figure or table (t-tests, crossover dimensions, convergence summary).
+
+| Script | Output |
+|---|---|
+| `src/figures/baseline_comparison.py` | `figures/baseline_comparison_smartvote_2023.pdf` |
+| `src/figures/baseline_train_test.py` | `figures/baseline_train_test_<dataset>.pdf`, all five datasets |
+| `src/figures/kernel_comparison.py` | `figures/kernel_comparison_mae_smartvote_2023.pdf` |
+| `src/figures/kernels_visual.py` | `figures/kernels_visual_smartvote_2023.pdf` |
+| `src/figures/iteration_effect.py` | `figures/iteration_effect_smartvote_2023.pdf` |
+| `src/figures/prior_phase.py` | `figures/prior_phase_smartvote_2023.pdf` |
+| `src/figures/prior_embeddings.py` | `figures/prior_embeddings_smartvote_2023.pdf` |
+| `src/figures/posterior_trajectory.py` | `figures/posterior_trajectory_smartvote_2023.pdf` |
+| `src/figures/weights_geometry.py` | `figures/weights_geometry_smartvote_2023.pdf` |
+| `src/figures/weights_distortion.py` | `figures/weights_distortion_smartvote_2023.pdf` |
+| `src/figures/pca_dimensionality.py` | `figures/pca_dimensionality_mae_smartvote_2023.pdf` |
+| `src/figures/prior_families.py` | `figures/prior_families_smartvote_2023.pdf` |
+| `src/figures/sampling_strategies.py` | `figures/sampling_strategies_smartvote_2023.pdf` |
+| `src/tables/baseline.py` | `tables/baseline_<dataset>.tex`, all five datasets |
+| `src/tables/weights.py` | `tables/weights_smartvote_2023.tex` |
+| `src/tables/posterior_effect.py` | `tables/posterior_effect_smartvote_2023.tex` |
+| `src/tables/point_estimate_mae.py` | `tables/point_estimate_mae_smartvote_2023.tex` |
+| `src/tables/point_estimate_boundary.py` | `tables/point_estimate_boundary_smartvote_2023.tex` |
+
+`tables/datasets.tex` and `tables/hyperparameter.tex` are written by hand.
+
+Last verified on 2026-09-11 on macOS 26 (Apple Silicon) with Python 3.14.0:
+`./reproduce.sh` completes in under a minute and regenerates the committed
+figures and tables exactly (pixel-identical PDFs, byte-identical `.tex`).
 
 ## Reproducing the results from scratch
 
@@ -98,12 +125,18 @@ python -m src.scripts.run_pca_sweep            # PCA baselines over all dimensio
 `run_iteration_effect` saves under `results/smartvote_2023/iteration_effect/models/`.
 Those six checkpoints (PCA init, u = 0, 20 iterations, one per prior variance)
 and the three `feature_effect` kernel checkpoints are the only model files kept
-in `results/`, because the notebooks load them.
+in `results/`, because the figure scripts load them.
 
-The additional experiments on point estimates, item updates, boundary
-regularization, and sampling strategies run inside their notebooks and write
-their intermediate results to `results/ixplore_design/` and
-`results/smartvote_2023/posterior_effect/`.
+The four small experiments of the design and appendix sections fit IXPLORE
+models on Smartvote 2023 in one to two minutes each and write to
+`results/ixplore_design/` and `results/smartvote_2023/posterior_effect/`:
+
+```bash
+python -m src.scripts.run_point_estimates          # MAP vs. posterior mean vs. full posterior
+python -m src.scripts.run_boundary_regularization  # Gaussian vs. log-barrier prior
+python -m src.scripts.run_posterior_effect         # point-estimate vs. uncertainty-weighted item update
+python -m src.scripts.run_sampling_strategies      # Rasch vs. posterior sampling of pseudo-answers
+```
 
 ## Datasets
 
