@@ -32,7 +32,7 @@ pip install -r requirements.txt
 ```
 
 The IRT baselines (IDEAL, emIRT, LSIRM) call R through `Rscript`, which must be
-on the `PATH` with the packages `pscl`, `emIRT`, and `lsirm12pl` installed
+on the `PATH` with the packages `pscl`, `emIRT`, `lsirm12pl`, and optionally `wnominate` installed
 (R 4.5.1 was used). R is only needed to rerun those baselines; the figure and
 table scripts work without it.
 
@@ -99,6 +99,15 @@ Algorithms: `pca-linear`, `pca-logistic`, `kernel-pca`, `tsne-logistic`,
 `umap-logistic`, `vae-2layer`, `vae-logistic`, `ideal`, `emirt`, `lsirm`,
 `ixplore`, `ixplore-binarised`. The fitted baseline models themselves are not
 stored in this repository, only their metrics.
+
+W-NOMINATE was also run on Smartvote 2023 (`src/models/wnominate_wrapper.py`,
+R package `wnominate`); its metrics are in
+`results/smartvote_2023/baseline/wnominate/`. It is not part of the paper's
+comparison, because its estimation does not handle response matrices with
+many missing values well (Section 4.3 of the paper), and it is commented out
+in `src/models/__init__.py`. The stored metrics document this: only two seeds
+per sparsity level completed, and at u = 0.9 the train reconstruction MAE
+rises to 0.33 from about 0.21 at lower sparsity.
 
 Configuration analysis on Smartvote 2023 (Figures 2 to 7):
 
