@@ -1,15 +1,15 @@
 """Regenerate every generated table of the paper from the stored results.
 
-tables/datasets.tex and tables/hyperparameter.tex are written by hand and
-are not touched.
+Table 1 (datasets) and Table 3 (hyperparameters) are written by hand in the
+paper source and are not produced here.
 
 Usage:
     python -m src.tables
 """
 
-from src.tables import baseline, point_estimate_boundary, point_estimate_mae, posterior_effect, weights
+from src.tables import baseline
 
-MODULES = [baseline, weights, posterior_effect, point_estimate_mae, point_estimate_boundary]
+MODULES = [baseline]
 
 
 def main():

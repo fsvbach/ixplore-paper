@@ -9,7 +9,6 @@ from src.models.pca_wrapper import PCALinear, PCALogistic
 from src.models.tsne_wrapper import TSNELogistic
 from src.models.umap_wrapper import UMAPLogistic
 from src.models.vae_wrapper import VAE
-# from src.models.wnominate_wrapper import WNOMINATE
 
 IXPLORE = partial(
     IXPLOREModel,
@@ -47,7 +46,6 @@ BASELINE_ALGORITHMS = {
     "vae-logistic": partial(VAE, decoder_type="logistic", beta=0.0, max_iters=6300),
     "ideal": IDEAL,
     "emirt": EMIRT,
-    # "wnominate": WNOMINATE,
     "lsirm": LSIRM,
     "ixplore": IXPLORE,
     "ixplore-binarised": IXPLORE_BINARISED,
@@ -61,7 +59,6 @@ MODEL_CLASSES = {
     "umap-logistic": UMAPLogistic,
     "ideal": IDEAL,
     "emirt": EMIRT,
-    # "wnominate": WNOMINATE,
     "lsirm": LSIRM,
     "vae-2layer": VAE,
     "vae-logistic": VAE,
@@ -79,7 +76,6 @@ ALGORITHM_LABELS = {
     "vae-logistic": "VAE (logistic)",
     "ideal": "IDEAL",
     "emirt": "emIRT",
-    # "wnominate": "W-NOMINATE",
     "lsirm": "LSIRM",
     "ixplore": "IXPLORE",
     "ixplore-binarised": "IXPLORE$^*$",

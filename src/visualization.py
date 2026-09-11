@@ -10,7 +10,6 @@ from pathlib import Path
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.patches import Ellipse
 
 from src.paths import FIGURES_DIR, ROOT
 
@@ -75,41 +74,6 @@ def fmt_tau(s: float, *, threshold: int = 3, rtol: float = 1e-3) -> str:
         if abs(k) >= threshold and abs(s - 10.0 ** k) <= rtol * 10.0 ** k:
             return f"10^{{{int(k)}}}"
     return f"{s:g}"
-
-
-def make_ellipse(mean: np.ndarray, cov: np.ndarray, n_std: float = 1.0, **kwargs) -> Ellipse:
-    """Matplotlib Ellipse patch for an n-sigma contour of a 2D Gaussian."""
-    eigvals, eigvecs = np.linalg.eigh(cov)
-    order = eigvals.argsort()[::-1]
-    eigvals, eigvecs = eigvals[order], eigvecs[:, order]
-    angle = np.degrees(np.arctan2(eigvecs[1, 0], eigvecs[0, 0]))
-    width, height = 2 * n_std * np.sqrt(eigvals)
-    return Ellipse(xy=mean, width=width, height=height, angle=angle, **kwargs)
-
-
-def ellipse_legend_handler(linewidth: float = 0.5):
-    """A HandlerPatch that draws Ellipse legend entries as ellipses (not boxes).
-
-    Use as ``handler_map={Ellipse: ellipse_legend_handler()}`` when calling
-    ``ax.legend`` so that ellipse patches show up as miniature ellipses in the
-    legend instead of the default rectangle stand-in.
-    """
-    from matplotlib.legend_handler import HandlerPatch
-
-    class _EllipseHandler(HandlerPatch):
-        def create_artists(self, legend, orig_handle, xdescent, ydescent,
-                           width, height, fontsize, trans):
-            center = (width / 2 - xdescent, height / 2 - ydescent)
-            patch = Ellipse(xy=center, width=width, height=height * 0.7,
-                            angle=0,
-                            facecolor=orig_handle.get_facecolor(),
-                            edgecolor=orig_handle.get_edgecolor(),
-                            linewidth=linewidth,
-                            linestyle=orig_handle.get_linestyle())
-            patch.set_transform(trans)
-            return [patch]
-
-    return _EllipseHandler()
 
 
 def panel_labels(axes, letters: str = "ABCDEFGH") -> None:

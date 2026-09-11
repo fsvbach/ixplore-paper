@@ -11,13 +11,8 @@ from src.figures import (
     kernel_comparison,
     kernels_visual,
     pca_dimensionality,
-    posterior_trajectory,
     prior_embeddings,
-    prior_families,
     prior_phase,
-    sampling_strategies,
-    weights_distortion,
-    weights_geometry,
 )
 
 MODULES = [
@@ -28,12 +23,7 @@ MODULES = [
     iteration_effect,
     prior_phase,
     prior_embeddings,
-    posterior_trajectory,
-    weights_geometry,
-    weights_distortion,
     pca_dimensionality,
-    prior_families,
-    sampling_strategies,
 ]
 
 

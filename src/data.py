@@ -79,25 +79,6 @@ def _split(reactions, info, test_fraction, seed=0):
     )
 
 
-def load_weights(name: str, split: str) -> pd.DataFrame | None:
-    """Load per-(user, item) weights for a dataset split, or None if absent."""
-    base = DATASET_DIRS[name]
-    if name == "smartvote_2023":
-        filename = "voters_weights.csv" if split == "test" else "candidates_weights.csv"
-    elif name == "smartvote_2019":
-        filename = "candidates_weights.csv"
-    elif name == "polis":
-        filename = "vTaiwan_weights.csv"
-    elif name == "voteview":
-        filename = "senators_weights.csv"
-    else:
-        raise ValueError(f"Unknown dataset: {name}")
-    path = base / filename
-    if not path.exists():
-        return None
-    return _read(path)
-
-
 def load_dataset(name: str, test_fraction: float = 0.0) -> Dataset:
     base = DATASET_DIRS[name]
     label = DATASET_LABELS[name]
