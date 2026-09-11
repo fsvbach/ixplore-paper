@@ -1,4 +1,4 @@
-fit_mae,fit_accuracy,fit_rmse,impute_mae,impute_accuracy,impute_rmse,spread,boundary,sigma,init,iteration,sparsity,seed
+fit_mae,fit_accuracy,fit_rmse,impute_mae,impute_accuracy,impute_rmse,spread,boundary,tau,init,iteration,sparsity,seed
 0.2541,0.7472,0.3153,,,,0.1293,0.0,0.05,pca,0,0.0,0
 0.2551,0.7489,0.3145,0.2659,0.728,0.3274,0.1118,0.0,0.05,pca,0,0.3,0
 0.2561,0.7475,0.3154,0.2635,0.7342,0.325,0.1128,0.0,0.05,pca,0,0.3,1

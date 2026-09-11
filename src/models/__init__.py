@@ -43,7 +43,7 @@ BASELINE_ALGORITHMS = {
     # max_iters=6300: empirical cap from an uncapped EVS sp_0.9 probe (23,502
     # iters to converge; loss within 5% of optimum by iter 6,279). Without the
     # KLD term (beta=0) early stopping rarely triggers, so this bounds runtime.
-    # Deviates from verbatim ECML 2024 — must be flagged in the report.
+    # Deviates from verbatim ECML 2024 - must be flagged in the report.
     "vae-logistic": partial(VAE, decoder_type="logistic", beta=0.0, max_iters=6300),
     "ideal": IDEAL,
     "emirt": EMIRT,

@@ -25,7 +25,7 @@ from ixplore.metrics import compute_distortion, compute_spread
 from src.data import DATASETS, load_dataset
 from src.models.ixplore_wrapper import IXPLOREModel
 
-# ── Defaults ──
+# -- Defaults --
 KERNELS = ["linear", "polynomial", "rff"]
 SPARSITY_LEVELS = [0.0, 0.3, 0.6, 0.9]
 N_SEEDS = 5

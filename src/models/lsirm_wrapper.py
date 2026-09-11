@@ -84,7 +84,7 @@ def _lsirm_probs(
     gamma: float,
 ) -> np.ndarray:
     """P(Y=1) under the 2PL LSIRM, vectorised over (N, J)."""
-    # Pairwise Euclidean distance ||z_n - w_j||  → (N, J)
+    # Pairwise Euclidean distance ||z_n - w_j||  -> (N, J)
     diff = z[:, None, :] - w[None, :, :]
     dist = np.linalg.norm(diff, axis=-1)
     logit = theta[:, None] * alpha[None, :] + beta[None, :] - gamma * dist
@@ -220,7 +220,7 @@ class LSIRM(SpatialModel):
         """Per-user MAP estimate under LSIRM's own prior.
 
         For each new user, holds w, alpha, beta, gamma fixed at the training
-        posterior means and maximises the log-posterior over (z, theta) —
+        posterior means and maximises the log-posterior over (z, theta) -
         the binary log-likelihood plus LSIRM's training prior
         ``z ~ N(0, I)``, ``theta ~ N(0, pr_sd_theta^2)``. The prior is
         essential: a free MLE is unidentified for users with few observed

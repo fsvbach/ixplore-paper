@@ -130,7 +130,7 @@ class IDEAL(SpatialModel):
         )
         # pscl drops lopsided items; pad betabar back to all original items so
         # predictions stay aligned with the input column order. Dropped items
-        # get zero discrimination + zero difficulty → neutral Phi(0) = 0.5.
+        # get zero discrimination + zero difficulty -> neutral Phi(0) = 0.5.
         full_betabar = pd.DataFrame(
             0.0,
             index=[f"Vote {i+1}" for i in range(len(reactions.columns))],
@@ -148,7 +148,7 @@ class IDEAL(SpatialModel):
         """Predict P(Y=1|X) = Phi(X @ beta - alpha) for each item."""
         assert self._betabar is not None
         beta = self._betabar.values  # (K, d+1): [disc1, disc2, ..., difficulty]
-        # Augment embedding with -1 so [x, y, -1] @ [β1, β2, α]^T = x'β - α
+        # Augment embedding with -1 so [x, y, -1] @ [beta1, beta2, alpha]^T = x'beta - alpha
         aug = np.column_stack([embedding, -np.ones(len(embedding))])
         return norm.cdf(aug @ beta.T)
 

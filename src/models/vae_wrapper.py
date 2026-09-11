@@ -1,4 +1,4 @@
-"""VAE spatial model — thin wrapper around the ECML 2024 implementation.
+"""VAE spatial model - thin wrapper around the ECML 2024 implementation.
 
 Architecture and training loop are taken verbatim from:
   Bachmann, Sarasua & Bernstein, "Fast and Adaptive Questionnaires for
@@ -21,7 +21,7 @@ from ixplore.utils import compute_column_means, mean_impute
 from src.models.base import SpatialModel
 
 
-# ── ECML model components (verbatim) ─────────────────────────────────────────
+# -- ECML model components (verbatim) -----------------------------------------
 
 class Encoder(nn.Module):
     def __init__(self, columns, latent_dim):
@@ -154,7 +154,7 @@ def _train_vae(encoder_cls, decoder_cls, reactions, beta=1, patience=300,
     return vae
 
 
-# ── SpatialModel adapter ─────────────────────────────────────────────────────
+# -- SpatialModel adapter -----------------------------------------------------
 
 class VAE(SpatialModel):
     """VAE baseline from ECML 2024, adapted to the SpatialModel interface."""

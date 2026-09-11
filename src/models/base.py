@@ -65,7 +65,7 @@ class SpatialModel(ABC):
         assert not np.isnan(preds).any(), "Predictions contain NaN values"
         return compute_metrics(preds, ground_truth.values, sparse_reactions.values)
 
-    # ── Shared logistic decoder (used by PCA/UMAP/t-SNE + Logistic wrappers) ──
+    # -- Shared logistic decoder (used by PCA/UMAP/t-SNE + Logistic wrappers) --
     # Stage 2 of the "embed-then-decode" pattern: given 2D training scores and the
     # original (NaN-containing) reaction matrix, fit a per-item binary LR on
     # observed entries. Items with only one observed class fall back to a constant.

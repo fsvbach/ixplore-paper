@@ -1,7 +1,7 @@
 """Analysis-side metrics.
 
 Adds experiment-protocol metrics that depend on a ground-truth full matrix
-(`get_masks`, `compute_metrics`, `compute_recovery`) — concepts that don't
+(`get_masks`, `compute_metrics`, `compute_recovery`) - concepts that don't
 exist in production inference. Package primitives live in `ixplore.metrics`.
 """
 
@@ -77,7 +77,7 @@ def compute_metrics(
 
 
 # ---------------------------------------------------------------------------
-# Per-user recovery: is the sparse re-embedding within 1σ of the full posterior?
+# Per-user recovery: is the sparse re-embedding within 1 sigma of the full posterior?
 # ---------------------------------------------------------------------------
 
 
@@ -102,7 +102,7 @@ def gaussian_moments(posteriors: np.ndarray, X_grid: np.ndarray) -> tuple[np.nda
 
 
 def within_1sigma(points: np.ndarray, means: np.ndarray, covs: np.ndarray) -> np.ndarray:
-    """Mahalanobis ≤ 1 check against moment-matched Gaussian(s).
+    """Mahalanobis <= 1 check against moment-matched Gaussian(s).
 
     Accepts a single (point, mean, cov) triple or aligned batches.
     Returns a scalar bool for single input, or a (N,) bool array for batches.
@@ -124,9 +124,9 @@ def compute_recovery(
     sparsity: float | None = None,
     random_state: int = 0,
 ) -> tuple[np.ndarray, float]:
-    """For each test user, check if the sparse-data position is within 1σ of the full posterior.
+    """For each test user, check if the sparse-data position is within 1 sigma of the full posterior.
 
-    "Within 1σ" is Mahalanobis distance ≤ 1 under the moment-matched Gaussian
+    "Within 1 sigma" is Mahalanobis distance <= 1 under the moment-matched Gaussian
     fit to the user's full-data posterior.
 
     Parameters
@@ -134,9 +134,9 @@ def compute_recovery(
     model : IXPLORE
         Fitted model providing item parameters and the latent grid.
     test_users : pd.DataFrame
-        Users × items, NaN for already-missing answers.
+        Users x items, NaN for already-missing answers.
     sparsity : float | None
-        Fraction of items KEPT per user when re-embedding. None ⇒ full.
+        Fraction of items KEPT per user when re-embedding. None => full.
     random_state : int
         Seed for the sparsity mask.
 
@@ -144,7 +144,7 @@ def compute_recovery(
     -------
     mahalanobis : (N,) array of Mahalanobis distances of sparse means under
         each user's full-data posterior Gaussian.
-    within_sigma_fraction : fraction of users with distance ≤ 1.
+    within_sigma_fraction : fraction of users with distance <= 1.
     """
     X_grid = model.X
 

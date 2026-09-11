@@ -26,7 +26,7 @@ from tqdm import tqdm
 from src.data import DATASETS, load_dataset
 from src.models import BASELINE_ALGORITHMS
 
-# ── Defaults ──
+# -- Defaults --
 SPARSITY_LEVELS = [0.0, 0.3, 0.6, 0.9]
 N_SEEDS = 5
 TEST_FRACTION = 0.15  # ignored when the dataset has a natural train/test split

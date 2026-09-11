@@ -1,17 +1,17 @@
-"""Prior-effect: per-σ posterior trajectories for test users.
+"""Prior-effect: per-tau posterior trajectories for test users.
 
-For each prior σ² in {0.05, 0.1, 0.25, 0.5, 1.0, 1e6}, load the corresponding
-fully-fit model from `iteration_effect/models/sigma_<σ²>_pca_sp_0.0_iter_20`
+For each prior tau^2 in {0.05, 0.1, 0.25, 0.5, 1.0, 1e6}, load the corresponding
+fully-fit model from `iteration_effect/models/tau_<tau^2>_pca_sp_0.0_iter_20`
 (PCA init, sparsity 0, iter 20, seed 0) and compute, for every test user, the
 running posterior mean and moment-matched covariance after revealing items
 1..k in natural order, k = 0..K.
 
 Default run (no arguments): smartvote_2023, test_fraction=0.15, source models
 from results/smartvote_2023/iteration_effect/models, output to
-results/smartvote_2023/latent_convergence. The sweep is run twice — once with
-`scale_weights=False` (default) and once with `scale_weights=True` — so
+results/smartvote_2023/latent_convergence. The sweep is run twice - once with
+`scale_weights=False` (default) and once with `scale_weights=True` - so
 downstream code can compare arrival times under both regimes; the scaled run
-writes `sigma_<σ²>_scaled.csv`, the unscaled run `sigma_<σ²>.csv`.
+writes `tau_<tau^2>_scaled.csv`, the unscaled run `tau_<tau^2>.csv`.
 
 Usage:
     python -m src.scripts.run_latent_convergence
@@ -29,7 +29,7 @@ from src.data import DATASETS, load_dataset
 from src.metrics import gaussian_moments, within_1sigma
 from src.models.ixplore_wrapper import IXPLOREModel
 
-SIGMA_VALUES = [0.05, 0.1, 0.25, 0.5, 1.0, 1e6]
+TAU_VALUES = [0.05, 0.1, 0.25, 0.5, 1.0, 1e6]  # prior variances tau^2
 
 
 def trajectory_for_model(model_dir: Path, test: pd.DataFrame,
@@ -80,10 +80,10 @@ def main(args=None):
 
     for scale_weights in (False, True):
         suffix = "_scaled" if scale_weights else ""
-        for sigma in tqdm(SIGMA_VALUES, desc=f"sigma (scale_weights={scale_weights})"):
-            model_dir = source / f"sigma_{sigma}_pca_sp_0.0_iter_20"
+        for tau in tqdm(TAU_VALUES, desc=f"tau (scale_weights={scale_weights})"):
+            model_dir = source / f"tau_{tau}_pca_sp_0.0_iter_20"
             traj = trajectory_for_model(model_dir, test, scale_weights=scale_weights)
-            out = out_dir / f"sigma_{sigma}{suffix}.csv"
+            out = out_dir / f"tau_{tau}{suffix}.csv"
             traj.to_csv(out, index=False)
 
     print(f"Prior-effect trajectories saved under {out_dir}")

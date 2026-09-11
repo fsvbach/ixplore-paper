@@ -53,8 +53,8 @@ def subplots(nrows=1, ncols=1, width_frac=1.0, aspect=None, **kwargs):
     return plt.subplots(nrows, ncols, **kwargs)
 
 
-def fmt_sigma(s: float, *, threshold: int = 3, rtol: float = 1e-3) -> str:
-    """Format a $\\sigma^2$ value for plot labels.
+def fmt_tau(s: float, *, threshold: int = 3, rtol: float = 1e-3) -> str:
+    """Format a $\\tau^2$ value for plot labels.
 
     Returns ``"10^k"`` (LaTeX-ready) when ``s`` is within ``rtol`` of an integer
     power of 10 with absolute exponent ``>= threshold``; otherwise falls back to

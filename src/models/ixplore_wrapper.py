@@ -14,7 +14,7 @@ from src.models.base import SpatialModel
 
 logging.getLogger("ixplore").setLevel(logging.WARNING)
 
-# ── Kernel registry ──
+# -- Kernel registry --
 # All kernels used in experiments must be registered here so that
 # models can be saved/loaded by kernel name instead of pickling callables.
 

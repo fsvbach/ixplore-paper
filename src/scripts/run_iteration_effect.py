@@ -1,9 +1,9 @@
 """Iteration effect: joint sweep of prior variance, initialization, and iteration count.
 
-3D sweep over (sigma^2, init, iteration), with sparsity/seed as the inner loop.
+3D sweep over (tau^2, init, iteration), with sparsity/seed as the inner loop.
 
 Default run (no arguments): smartvote_2023, test_fraction=0.15,
-sigma^2 in {0.05, 0.1, 0.25, 0.5, 1.0, 1e6}, initialization in
+tau^2 in {0.05, 0.1, 0.25, 0.5, 1.0, 1e6}, initialization in
 {pca (pca_initialization=True), random (pca_initialization=False)},
 iteration checkpoints {0, 1, 2, 5, 10, 20}, sparsity levels {0.0, 0.3, 0.6,
 0.9}, 5 seeds, sampling_resolution=100. Models start at n_iterations=0 and are
@@ -29,8 +29,8 @@ from ixplore.metrics import compute_distortion, compute_spread
 from src.data import DATASETS, load_dataset
 from src.models.ixplore_wrapper import IXPLOREModel
 
-# ── Defaults ──
-SIGMA_VALUES = [0.05, 0.1, 0.25, 0.5, 1.0, 1e6]
+# -- Defaults --
+TAU_VALUES = [0.05, 0.1, 0.25, 0.5, 1.0, 1e6]  # prior variances tau^2
 INITIALIZATIONS = [("pca", True), ("random", False)]
 ITERATION_CHECKPOINTS = [0, 1, 2, 5, 10, 20]
 SPARSITY_LEVELS = [0.0, 0.3, 0.6, 0.9]
@@ -57,9 +57,9 @@ def main(args=None):
     train_results = []
     test_results = []
 
-    sigma_bar = tqdm(SIGMA_VALUES, desc="Sigma", position=0)
-    for sigma in sigma_bar:
-        sigma_bar.set_postfix(sigma=sigma)
+    tau_bar = tqdm(TAU_VALUES, desc="Tau", position=0)
+    for tau in tau_bar:
+        tau_bar.set_postfix(tau=tau)
 
         init_bar = tqdm(INITIALIZATIONS, desc="Init", position=1, leave=False)
         for init_name, pca_init in init_bar:
@@ -75,7 +75,7 @@ def main(args=None):
                     sparse_train = dataset.get_data_with_sparsity("train", u, seed_train)
 
                     model = IXPLOREModel(
-                        prior_variance=sigma,
+                        prior_variance=tau,
                         n_iterations=0,
                         pca_initialization=pca_init,
                         random_state=seed_train,
@@ -98,14 +98,14 @@ def main(args=None):
                             **train_metrics, **train_spread,
                             "distortion_mean": round(dist_mean, 4),
                             "distortion_std": round(dist_std, 4),
-                            "sigma": sigma, "init": init_name, "iteration": i,
+                            "tau": tau, "init": init_name, "iteration": i,
                             "sparsity": u, "seed": seed_train,
                         })
 
                         # Save model at every checkpoint at seed 0 so the iteration trajectory
                         # of the embedding can be inspected downstream.
                         if seed_train == 0:
-                            model.save(models_dir / f"sigma_{sigma}_{init_name}_sp_{u}_iter_{i}",
+                            model.save(models_dir / f"tau_{tau}_{init_name}_sp_{u}_iter_{i}",
                                        dataset=opts.dataset, sparsity=u, seed=0)
 
                         # Test loop only at u=0.0 (no randomness in train mask)
@@ -120,7 +120,7 @@ def main(args=None):
                                     test_spread = compute_spread(test_emb.values, inner.limits, threshold=THRESHOLD)
                                     test_results.append({
                                         **test_metrics, **test_spread,
-                                        "sigma": sigma, "init": init_name, "iteration": i,
+                                        "tau": tau, "init": init_name, "iteration": i,
                                         "sparsity": v, "seed": seed_test,
                                     })
 

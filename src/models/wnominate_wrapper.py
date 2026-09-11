@@ -5,7 +5,7 @@ reads back legislator coordinates plus per-roll-call midpoints and spreads,
 the dimension weights, and the utility scale beta.
 
 Predictions are computed in Python using the W-NOMINATE Gaussian utility
-(Poole & Rosenthal; see Poole 2007 §1):
+(Poole & Rosenthal; see Poole 2007 Sec. 1):
 
     u_yea = beta * exp(-0.5 * sum_k w_k^2 * (x_k - z_yea_k)^2)
     u_nay = beta * exp(-0.5 * sum_k w_k^2 * (x_k - z_nay_k)^2)
@@ -43,7 +43,7 @@ library(pscl)
 library(wnominate)
 
 reactions <- read.csv("{reactions_path}", header=TRUE, row.names=1, check.names=FALSE)
-# Pass row/column names through rollcall() — otherwise wnominate relabels
+# Pass row/column names through rollcall() - otherwise wnominate relabels
 # legislators "Legislator 1..N" and rollcalls "1..J", losing alignment.
 rc <- rollcall(reactions,
                legis.names=rownames(reactions),
@@ -128,7 +128,7 @@ class WNOMINATE(SpatialModel):
         trials: int = 3,
         max_sparsity: float = 0.85,
     ):
-        # polarity=None → pick legislators with most observations in fit()
+        # polarity=None -> pick legislators with most observations in fit()
         # (guarantees they survive minvotes filter, no matter the sparsity).
         # max_sparsity: above this missing fraction the matrix is below what
         # W-NOMINATE's alternating estimator can meaningfully (or tractably)
@@ -170,7 +170,7 @@ class WNOMINATE(SpatialModel):
 
         Used when the data is too sparse for W-NOMINATE to fit. Every user
         and item is marked dropped, so predict() falls back to the per-item
-        training positive rate (mean-imputation) — a fairer "no-model"
+        training positive rate (mean-imputation) - a fairer "no-model"
         baseline than a flat 0.5.
         """
         D = self.n_components
@@ -193,7 +193,7 @@ class WNOMINATE(SpatialModel):
         # W-NOMINATE can't estimate (dropped rows/cols, or too-sparse data).
         self._item_means = self._compute_item_means(reactions)
 
-        # Too sparse for W-NOMINATE → mean-imputation model, skip the R call.
+        # Too sparse for W-NOMINATE -> mean-imputation model, skip the R call.
         observed_frac = float((~reactions.isna()).to_numpy().mean())
         if (1.0 - observed_frac) > self.max_sparsity:
             self._set_degenerate(reactions)
@@ -202,7 +202,7 @@ class WNOMINATE(SpatialModel):
         # Polarity legislators must survive wnominate's minvotes filter,
         # otherwise the R-side check fails with "polarity is incorrectly
         # specified". When polarity is None, pick the rows with the most
-        # observations — those are guaranteed to survive.
+        # observations - those are guaranteed to survive.
         if self.polarity is None:
             obs_per_user = (~reactions.isna()).sum(axis=1)
             top_rows = obs_per_user.sort_values(ascending=False).index[: self.n_components]
@@ -264,7 +264,7 @@ class WNOMINATE(SpatialModel):
         # --- Item parameters ---------------------------------------------
         # wnominate ignores vote.names and labels rollcalls "1".."J" by
         # position; re-key to original column names via that 1-based index.
-        # Dropped roll calls get no parameters → mark them, predict 0.5.
+        # Dropped roll calls get no parameters -> mark them, predict 0.5.
         mid_cols = [f"midpoint{d + 1}D" for d in range(self.n_components)]
         sp_cols = [f"spread{d + 1}D" for d in range(self.n_components)]
         full_mid = pd.DataFrame(0.0, index=reactions.columns, columns=mid_cols)
@@ -304,7 +304,7 @@ class WNOMINATE(SpatialModel):
         """P(yea); per-item mean-imputation for anything W-NOMINATE dropped.
 
         Dropped roll calls (columns) have no item parameters and dropped
-        legislators (rows) have no coordinate — neither is estimable under
+        legislators (rows) have no coordinate - neither is estimable under
         W-NOMINATE's own filtering rules. Rather than fabricate a
         coordinate, those cells fall back to the per-item training positive
         rate (mean-imputation), a fairer "no-model" baseline than 0.5.
@@ -330,16 +330,16 @@ class WNOMINATE(SpatialModel):
         return preds
 
     def embed(self, reactions: pd.DataFrame) -> pd.DataFrame:
-        """Per-user MLE: argmax_x Σ_j log P(y_ij | x, item params).
+        """Per-user MLE: argmax_x sum_j log P(y_ij | x, item params).
 
-        Mirrors W-NOMINATE's step-2 update (Poole 2007 §1) but for a single
+        Mirrors W-NOMINATE's step-2 update (Poole 2007 Sec. 1) but for a single
         user at a time, with item parameters fixed at the fitted values.
         Observations on dropped roll calls are ignored (no parameters).
         """
         assert self._midpoints is not None
         D = self.n_components
         if self._degenerate:
-            # No item parameters were estimated → no information to embed on.
+            # No item parameters were estimated -> no information to embed on.
             return pd.DataFrame(
                 0.0, index=reactions.index, columns=_embedding_columns(D),
                 dtype=float,

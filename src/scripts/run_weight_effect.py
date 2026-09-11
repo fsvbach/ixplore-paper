@@ -38,7 +38,7 @@ from src.data import load_dataset, load_weights
 from src.metrics import compute_metrics
 from src.models.ixplore_wrapper import IXPLOREModel
 
-# ── Defaults (PCA init; prior_variance and n_iterations chosen in Experiment 1) ──
+# -- Defaults (PCA init; prior_variance and n_iterations chosen in Experiment 1) --
 DATASET = "smartvote_2023"
 SCHEDULES = ["uniform", "provided", "extreme"]
 SCALE_WEIGHTS = [False, True]
@@ -78,7 +78,7 @@ def main(args=None):
     output_dir = opts.output_dir or Path(f"results/{DATASET}/weight_effect")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── Train once with uniform weights, PCA init, default sigma, 50 iter ──
+    # -- Train once with uniform weights, PCA init, default tau^2, 50 iter --
     model = IXPLOREModel(
         prior_variance=PRIOR_VARIANCE,
         n_iterations=N_ITERATIONS,

@@ -94,7 +94,7 @@ class KernelPCA(SpatialModel):
         # Set in _fit_decoder: True if the logistic fallback was used (N large).
         self._use_logistic_decoder: bool = False
 
-    # ── gamma tuning (training data only) ──
+    # -- gamma tuning (training data only) --
     def _score_gamma(self, X_obs: np.ndarray, X_full: np.ndarray,
                      holdout_mask: np.ndarray, gamma: float) -> float:
         """Fit KPCA + decoder on X_obs (holdout entries set NaN), return MAE on
@@ -156,7 +156,7 @@ class KernelPCA(SpatialModel):
         )
         self._fit_decoder(scores, X)
 
-    # ── stage-2 decoder: per-item Platt-calibrated RBF SVM ──
+    # -- stage-2 decoder: per-item Platt-calibrated RBF SVM --
     # For N <= SVM_DECODER_MAX_N users the per-item Platt-calibrated RBF SVM is
     # used. Beyond that its probability=True cross-validation makes a full
     # evaluation sweep impractically slow, so the shared per-item logistic
